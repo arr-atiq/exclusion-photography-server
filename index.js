@@ -24,6 +24,7 @@ app.get('/', (req, res) => {
 
 client.connect(err => {
   const PhotographyCollection = client.db("exclusionsPhotography").collection("photography");
+  const ReviewCollection = client.db("exclusionsPhotography").collection("placeReview");
  
   app.get('/allServices', (req, res) => {
     PhotographyCollection.find()
@@ -35,6 +36,23 @@ client.connect(err => {
   app.post('/addService', (req, res) => {
     const newService = req.body;
     PhotographyCollection.insertOne(newService)
+    .then(result => {
+      console.log(result);
+      res.redirect('/')
+    })
+  })
+
+
+  app.get('/allReviews', (req, res) => {
+    ReviewCollection.find()
+    .toArray((err, items) => {
+      res.send(items)
+    })
+  })
+
+  app.post('/addReview', (req, res) => {
+    const newReview = req.body;
+    ReviewCollection.insertOne(newReview)
     .then(result => {
       console.log(result);
       res.redirect('/')
